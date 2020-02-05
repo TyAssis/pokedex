@@ -17,14 +17,24 @@ interface Pokemon {
 }
 
 const find = (name: string): Promise<Pokemon> => {
-  if (name === 'Charmander') {
-    return Promise.resolve({
-      id: 1,
-      name: 'Charmander',
-      type: PokemonTypes.fire,
-    })
+  const pokemon: Pokemon | undefined = pokemons.find(poke => {
+    if (poke.name === name) {
+      return poke;
+    }
+  });
+
+  if (pokemon) {
+    return Promise.resolve(pokemon);
   }
   return Promise.reject(Error('This pokemon does not exist'));
 }
 
-export { find };
+const pokemons: Array<Pokemon> = [
+  {
+    id: 1,
+    name: 'Charmander',
+    type: PokemonTypes.fire,
+  }
+];
+
+export { find, pokemons };

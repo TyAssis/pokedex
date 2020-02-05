@@ -11,8 +11,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // middleware for all routes
-app.all('*', (_req, _res, next) => {
-  authentication('Taylon', '1234')
+app.all('*', async (req: express.Request, res, next) => {
+  const name = req.headers.name ? req.headers.name as string : '';
+  const token = req.headers.token ? req.headers.token as string : '';
+  try {
+    const currentTrainer = await authentication(name, token)
+  } catch (error) {
+    if (error instanceof Error) {
+    res.status(401).send('You are not allowed') 
+   }
+  }
   next()
 });
 
